@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './Components/Navbar';
 import HomePage from './Components/HomePage';
-import BG from './Assets/BG.png'; // Make sure this path is correct
+import BG from './assets/BG.png'; // Fixed case-sensitive path for Vercel
 
 function App() {
   return (
