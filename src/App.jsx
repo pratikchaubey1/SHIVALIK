@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './Components/Navbar';
 import HomePage from './Components/HomePage';
-import bg from './assets/bg.png';
+import bg from '../assets/bg.png';
 function App() {
   return (
     <div>
