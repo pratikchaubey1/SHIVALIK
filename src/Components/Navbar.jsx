@@ -3,8 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { IoIosSearch } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { FaShoppingCart } from "react-icons/fa";
-import { MdContactEmergency } from 'react-icons/md';
-import { HiLogin } from 'react-icons/hi';
+
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
