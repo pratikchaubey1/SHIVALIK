@@ -1,59 +1,49 @@
 import React, { useContext } from "react";
-import { BsFillCartPlusFill } from "react-icons/bs";
+import { motion } from "framer-motion";
 import { ProductsData } from "../context/Context";
-import { Link } from "react-router-dom";
 
 function BestSellingProduct() {
-  const { product,HandleClickAdd} = useContext(ProductsData);
-  console.log(product);
-  
+  const { product } = useContext(ProductsData);
 
   return (
-    <div className="mt-10 flex flex-wrap justify-center mb-4 gap-9 flex-col items-center">
-      <h1 className="mt-10 mb-10 text-3xl font-bold">Best Selling Products</h1>
-      <div className="flex flex-wrap gap-8 justify-center">
-      {product && product.length > 0 ? (
-        product.map((data) => (
-          <div
-            key={data.id}
-            className="w-80 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#008585]/50"
-          >
-            {/* Product Image */}
-            <img
-              className="h-56 w-full object-cover rounded-t-2xl cursor-pointer transition-transform duration-500 hover:scale-110"
-              src={data.src}
-              alt={data.title}
-            />
+    <div className="mt-10 flex flex-col items-center gap-10 px-5">
+      <h1 className="text-4xl font-bold tracking-wide text-center">
+        Best Selling Products
+      </h1>
 
-            {/* Content */}
-            <div className="p-6 flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-semibold text-gray-800">{data.title}</h1>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  {data.description}
-                </p>
+      {/* 3 Square Cards in a Row */}
+      <div className="grid grid-cols-3 gap-6 justify-items-center">
+        {product && product.slice(0, 3).map((data, index) => (
+          <motion.div
+            key={data.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="group [perspective:1000px] cursor-pointer"
+          >
+            <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-80 md:h-80 transition-transform duration-[1000ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] rounded-xl overflow-hidden shadow-lg">
+              
+              {/* Front Side */}
+              <div className="absolute w-full h-full [backface-visibility:hidden]">
+                <img
+                  src={data.src}
+                  alt={data.title}
+                  className="w-full h-full object-cover rounded-xl"
+                />
               </div>
 
-              {/* Price + Cart Button */}
-              <div className="flex justify-between items-center bg-white/70 backdrop-blur-md rounded-xl px-5 py-3 shadow-md transition-all duration-300 hover:shadow-lg">
-                <h1 className="text-xl font-bold text-blue-500">₹{data.price}</h1>
-                <button
-                onClick={() => HandleClickAdd(data.id)}
-                className="hover:cursor-pointer items-center justify-center p-3 rounded-full border-2 border-[#008585] text-[#008585] transition-all duration-300 hover:bg-[#008585] hover:text-white hover:shadow-md">
-                  <BsFillCartPlusFill size={20} />
-                </button>
+              {/* Back Side */}
+              <div className="absolute w-full h-full [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                <img
+                  src={data.sck}
+                  alt={data.title}
+                  className="w-full h-full object-cover rounded-xl"
+                />
               </div>
             </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-gray-600 text-lg">No products found</p>
-      )}
+          </motion.div>
+        ))}
       </div>
-      <Link to="/cart-Detail">
-       <button className="h-15 w-50 bg-[#008585] rounded-md text-2xl hover:cursor-pointer text-white font-bold hover:border-2 hover:text-black hover:bg-white">See more </button>
-      </Link>
-     
     </div>
   );
 }
