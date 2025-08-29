@@ -64,7 +64,7 @@ function Show() {
               768: { slidesPerView: 2, spaceBetween: 16 },
               1024: { slidesPerView: 2.5, spaceBetween: 20 },
             }}
-            autoplay={{ delay: 600, disableOnInteraction: false }}
+            autoplay={{ delay: 400, disableOnInteraction: false }}
             coverflowEffect={{
               rotate: 0,
               stretch: 15,
@@ -72,7 +72,7 @@ function Show() {
               modifier: 2,
               slideShadows: false,
             }}
-            pagination={{ clickable: true }}
+            // pagination={{ clickable: true }}
           >
             {slides.map((s, i) => (
               <SwiperSlide key={i}>

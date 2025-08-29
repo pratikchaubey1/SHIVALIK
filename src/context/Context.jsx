@@ -23,7 +23,7 @@ const Products = [
  export function Context({children}) {
     const [product,setProduct] = useState(Products)
     const [addCart,setAddCart] = useState([])
-
+    console.log("context wala ",product)
     const HandleClickAdd = (id) => {
         const addData = product.find((item) => item.id === id)
 

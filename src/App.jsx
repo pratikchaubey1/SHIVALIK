@@ -14,6 +14,7 @@ import About from './Components/About';
 import Contact from './Components/Contact';
 import Account from './Components/Account';
 import Payment from './Components/Payment';
+import Card from './Components/Card';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <HomePage />
                 <Hero />
                 <BestSellingProduct />
+                {/* <Card/> */}
               </>
             }
           />
