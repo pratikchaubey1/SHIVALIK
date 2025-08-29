@@ -64,7 +64,7 @@ function Show() {
               768: { slidesPerView: 2, spaceBetween: 16 },
               1024: { slidesPerView: 2.5, spaceBetween: 20 },
             }}
-            autoplay={{ delay: 300, disableOnInteraction: false }}
+            autoplay={{ delay: 600, disableOnInteraction: false }}
             coverflowEffect={{
               rotate: 0,
               stretch: 15,

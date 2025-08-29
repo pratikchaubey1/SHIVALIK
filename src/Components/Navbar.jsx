@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect, useContext } from 'react'
 import { motion, useScroll, useTransform } from "framer-motion";
 import { IoIosSearch } from "react-icons/io";
 import { MdMenu } from "react-icons/md";
 import { FiShoppingBag } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
-import { FaShoppingCart } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { ProductsData } from '../context/Context';
 
@@ -40,10 +38,14 @@ function Navbar() {
 
           {/* Icons */}
     
-        </div>      <div className="absolute right-4 sm:right-6 top-2 sm:top-6 flex gap-3 sm:gap-6 text-gray-700 text-xl sm:text-xl">
-            <a href="#menu" className="hover:text-[#611f69] transition-colors">
-             <FiShoppingBag />
-            </a>
+        </div>      
+        <div className="absolute right-4 sm:right-6 top-2 sm:top-6 flex gap-3 sm:gap-6 text-gray-700 text-xl sm:text-xl">
+            <div className='flex gap-1 justify-center items-center' >
+            <Link to="/cart" className="hover:text-[rgb(97,31,105)] transition-colors">
+            <FiShoppingBag/>
+            </Link>
+             <span className='h-6 w-6 text-base rounded-full   flex justify-center items-center'>{addCart.length}</span>
+            </div>
              <a href="#menu" className="hover:text-[#611f69] transition-colors">
              <CgProfile/>
             </a>
@@ -54,16 +56,6 @@ function Navbar() {
              <a href="#menu" className="hover:text-[#611f69] transition-colors">
               <MdMenu /> 
             </a>
-           
-           <div className='flex gap-2 justify-center items-center'>
-             <Link to="/cart" className="hover:text-[#611f69] transition-colors">
-            <FaShoppingCart/>
-            </Link>
-            <span className=' animate-bounce text-[#008585]'>{addCart.length}</span>
-           </div>
-             <a href="#contact" className="hover:text-[#611f69] transition-colors">
-                 <CgProfile />
-             </a>
           </div>
       </motion.nav>
     </div>
