@@ -2,7 +2,11 @@ import React from 'react';
 import Navbar from './Components/Navbar';
 import HomePage from './Components/HomePage';
 import Background from './assets/BG.png';
-import  Hero from './Components/Hero';
+import Hero from './Components/Hero';
+import BestSellingProduct from './Components/BestSellingProduct';
+import { Routes, Route } from 'react-router-dom';
+import Cart from './Components/Cart';
+import CartDetail from './Components/CartDetail';
 
 function App() {
   return (
@@ -15,10 +19,24 @@ function App() {
         <Navbar />
       </div>
 
-      
       <div>
-        <HomePage />
-        <Hero />
+        <Routes>
+          {/* Home Page Route */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <BestSellingProduct />
+                <HomePage />
+              </>
+            }
+          />
+
+          {/* Cart Route */}
+          <Route path="/cart" element={<Cart />} />
+          <Route path='/cart-Detail' element={<CartDetail/>}></Route>
+        </Routes>
       </div>
     </div>
   );

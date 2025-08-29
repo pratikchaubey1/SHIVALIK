@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { motion, useScroll, useTransform } from "framer-motion";
 import { IoIosSearch } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { FaShoppingCart } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { ProductsData } from '../context/Context';
 
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const {addCart} = useContext(ProductsData)
 
   const { scrollY } = useScroll();
   const logoSize = useTransform(scrollY, [0, 200], ["13vw", "3vw"]); // text resize on scroll
@@ -47,9 +50,12 @@ function Navbar() {
               <IoIosSearch />
             </a>
            
-            <a href="#cart" className="hover:text-[#611f69] transition-colors">
-              <FaShoppingCart />
-            </a>
+           <div className='flex gap-2 justify-center items-center'>
+             <Link to="/cart" className="hover:text-[#611f69] transition-colors">
+            <FaShoppingCart/>
+            </Link>
+            <span className=' animate-bounce text-[#008585]'>{addCart.length}</span>
+           </div>
              <a href="#contact" className="hover:text-[#611f69] transition-colors">
                  <CgProfile />
              </a>
