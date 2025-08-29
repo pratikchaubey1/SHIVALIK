@@ -8,6 +8,12 @@ import { motion } from 'framer-motion';
 import { Routes, Route } from 'react-router-dom';
 import Cart from './Components/Cart';
 import CartDetail from './Components/CartDetail';
+import NotFound from './Components/NotFound';
+import Footer from './Components/Footer';
+import About from './Components/About';
+import Contact from './Components/Contact';
+import Account from './Components/Account';
+import Payment from './Components/Payment';
 
 function App() {
   return (
@@ -74,8 +80,15 @@ function App() {
           {/* Cart Route */}
           <Route path="/cart" element={<Cart />} />
           <Route path='/cart-Detail' element={<CartDetail/>}></Route>
+          <Route path='/about' element={<About/>}/>
+          <Route path='/contact' element={<Contact/>}></Route>
+          <Route path='/account' element={<Account/>}/>
+          <Route path='/pay' element={<Payment/>}/>
+          <Route path='*' element={<NotFound/>}></Route>
         </Routes>
+         <Footer/>
       </div>
+      
     </div>
   );
 }
