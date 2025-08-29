@@ -1,18 +1,24 @@
-import React from "react";
-import { motion } from "framer-motion";
-import Navbar from "./Components/Navbar";
-import Background from "./assets/Background.png";
+import React from 'react';
+import Navbar from './Components/Navbar';
+import HomePage from './Components/HomePage';
+import Background from './assets/Background.png';
+import Hero from './Components/Hero';
+import BestSellingProduct from './Components/BestSellingProduct';
+import { motion } from 'framer-motion';
+import { Routes, Route } from 'react-router-dom';
+import Cart from './Components/Cart';
+import CartDetail from './Components/CartDetail';
 
 function App() {
   return (
-    <div className="w-full min-h-screen">
-      {/* Background Section */}
+    <div>
+      {/* Navbar Section with Background */}
       <div
-        className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat"
+        className="h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${Background})` }}
+
       >
-        {/* Text Section */}
-        <motion.div
+         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
@@ -48,14 +54,27 @@ function App() {
             Know More
           </button>
         </motion.div>
-
-        {/* Navbar */}
         <Navbar />
       </div>
 
-      {/* Main Content */}
-      <div className="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-     
+      <div>
+        <Routes>
+          {/* Home Page Route */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <BestSellingProduct />
+                <HomePage />
+              </>
+            }
+          />
+
+          {/* Cart Route */}
+          <Route path="/cart" element={<Cart />} />
+          <Route path='/cart-Detail' element={<CartDetail/>}></Route>
+        </Routes>
       </div>
     </div>
   );
