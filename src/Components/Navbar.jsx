@@ -1,26 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { IoIosSearch } from "react-icons/io";
+import { MdMenu } from "react-icons/md";
+import { FiShoppingBag } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdContactEmergency } from 'react-icons/md';
-import { HiLogin } from 'react-icons/hi';
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-
   const { scrollY } = useScroll();
-  const logoSize = useTransform(scrollY, [0, 200], ["13vw", "3vw"]); // text resize on scroll
+  const logoSize = useTransform(scrollY, [0, 200], ["8vw", "4vw"]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -32,34 +23,35 @@ function Navbar() {
           isScrolled ? "bg-white shadow-md" : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto relative px-6 py-3 flex justify-center items-center">
-          
-          {/* Center Brand Name */}
+        <div className="max-w-7xl mx-auto relative px-4 sm:px-6 py-2 sm:py-3 flex justify-center items-center">
+          {/* Brand Name */}
           <motion.h1
             style={{ fontSize: logoSize }}
-            className="font-serif tracking-widest text-[#611f69] text-center "
+            className="font-serif tracking-widest text-[#611f69] text-center text-3xl sm:text-6xl lg:text-8xl"
           >
             SHIVALIK
           </motion.h1>
 
-          {/* Right Icons */}
-          <div className="absolute right-6 top-8 flex gap-6 text-gray-700 text-2xl">
+          {/* Icons */}
+    
+        </div>      <div className="absolute right-4 sm:right-6 top-2 sm:top-6 flex gap-3 sm:gap-6 text-gray-700 text-xl sm:text-xl">
+            <a href="#menu" className="hover:text-[#611f69] transition-colors">
+             <FiShoppingBag />
+            </a>
+             <a href="#menu" className="hover:text-[#611f69] transition-colors">
+             <CgProfile/>
+            </a>
             <a href="#search" className="hover:text-[#611f69] transition-colors">
               <IoIosSearch />
             </a>
-           
-            <a href="#cart" className="hover:text-[#611f69] transition-colors">
-              <FaShoppingCart />
+            
+             <a href="#menu" className="hover:text-[#611f69] transition-colors">
+              <MdMenu /> 
             </a>
-             <a href="#contact" className="hover:text-[#611f69] transition-colors">
-                 <CgProfile />
-             </a>
           </div>
-
-        </div>
       </motion.nav>
     </div>
-  )
+  );
 }
 
 export default Navbar;
