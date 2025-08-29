@@ -7,6 +7,7 @@ import BestSellingProduct from './Components/BestSellingProduct';
 import { Routes, Route } from 'react-router-dom';
 import Cart from './Components/Cart';
 import CartDetail from './Components/CartDetail';
+import NotFound from './Components/NotFound';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           {/* Cart Route */}
           <Route path="/cart" element={<Cart />} />
           <Route path='/cart-Detail' element={<CartDetail/>}></Route>
+          <Route path='*' element={<NotFound/>}></Route>
         </Routes>
       </div>
     </div>
