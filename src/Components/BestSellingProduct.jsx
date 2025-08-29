@@ -1,49 +1,51 @@
 import React, { useContext } from "react";
-import { motion } from "framer-motion";
+import { CiHeart } from "react-icons/ci";
 import { ProductsData } from "../context/Context";
 
 function BestSellingProduct() {
-  const { product } = useContext(ProductsData);
+  const { product, HandleClickAdd } = useContext(ProductsData);
 
   return (
-    <div className="mt-10 flex flex-col items-center gap-10 px-5">
-      <h1 className="text-4xl font-bold tracking-wide text-center">
-        Best Selling Products
-      </h1>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center px-4">
+      {product.map((item) => (
+        <div
+          key={item.id}
+          className="w-full max-w-[260px] mx-auto rounded-xl border border-black shadow-lg overflow-hidden bg-white transition transform hover:-translate-y-2 hover:shadow-2xl hover:border-purple-600"
+        >
+          {/* Image Section */}
+          <div className="relative p-2">
+            <img
+              src={item.src}
+              alt={item.title}
+              className="w-full h-52 object-cover rounded-lg"
+            />
+            <span className="absolute bottom-2 right-2 bg-purple-200 text-purple-800 text-[10px] font-medium px-2 py-0.5 rounded-lg shadow">
+              March, 24
+            </span>
+          </div>
 
-      {/* 3 Square Cards in a Row */}
-      <div className="grid grid-cols-3 gap-6 justify-items-center">
-        {product && product.slice(0, 3).map((data, index) => (
-          <motion.div
-            key={data.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group [perspective:1000px] cursor-pointer"
-          >
-            <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-80 md:h-80 transition-transform duration-[1000ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] rounded-xl overflow-hidden shadow-lg">
-              
-              {/* Front Side */}
-              <div className="absolute w-full h-full [backface-visibility:hidden]">
-                <img
-                  src={data.src}
-                  alt={data.title}
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
+          {/* Title & Description */}
+          <div className="p-3">
+            <h2 className="text-base font-semibold">{item.title}</h2>
+            <p className="text-gray-500 text-xs mt-1 line-clamp-2">
+              {item.description}
+            </p>
+          </div>
 
-              {/* Back Side */}
-              <div className="absolute w-full h-full [transform:rotateY(180deg)] [backface-visibility:hidden]">
-                <img
-                  src={data.sck}
-                  alt={data.title}
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+          {/* Price & Wishlist Button */}
+          <div className="flex justify-between items-center p-3">
+            <span className="flex items-center gap-1 text-gray-800 font-bold text-sm">
+              <span className="text-lg">⚡</span> {item.price}
+            </span>
+            <button
+              onClick={() => HandleClickAdd(item.id)}
+              className="p-1.5 rounded-full border border-black hover:bg-red-500 hover:text-white transition"
+            >
+              <CiHeart size={18} />
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

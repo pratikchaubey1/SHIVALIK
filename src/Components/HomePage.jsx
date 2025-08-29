@@ -45,20 +45,7 @@ function HomePage() {
           </button>
         </motion.div>
 
-        {/* Floating Object Card */}
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 1 }}
-          className="absolute top-1/3 right-10 sm:right-16 md:right-24 w-64 h-64 sm:w-72 sm:h-72 bg-white rounded-xl shadow-2xl flex items-center justify-center hover:scale-105 transition-transform duration-500"
-        >
-          <div className="text-center">
-            <h3 className="font-bold text-xl sm:text-2xl mb-2">Premium Service</h3>
-            <p className="text-sm sm:text-base text-gray-700">
-              Get the best services with Shivalik Hub. Reliable, fast, and trusted.
-            </p>
-          </div>
-        </motion.div>
+     
       </div>
 
       {/* Main Content */}
