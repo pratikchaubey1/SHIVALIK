@@ -21,7 +21,7 @@ function Hero() {
   }
 
   return (
-    <div className='h-200 bg-[#a7cbd9]'>
+    <div className='h-200 '>
       <div className='flex flex-col'>
         <h1 className='text-3xl font-bold ml-4 sm:ml-10 md:ml-15 mt-4 mb-5'>Category</h1>
         <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mb-3'/>
@@ -37,7 +37,7 @@ function Hero() {
               <img 
                 src={Partner} 
                 alt="Partner Program" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -52,7 +52,7 @@ function Hero() {
               <img 
                 src={Pan}
                 alt="Pan Card" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -70,7 +70,7 @@ function Hero() {
               <img 
                 src={In} 
                 alt="Insurance" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -85,7 +85,7 @@ function Hero() {
               <img 
                 src={service} 
                 alt="Service" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -103,7 +103,7 @@ function Hero() {
               <img 
                 src={Tax} 
                 alt="Tax" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -118,7 +118,7 @@ function Hero() {
               <img 
                 src={land}
                 alt="Land Record" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -136,7 +136,7 @@ function Hero() {
               <img 
                 src={certi}
                 alt="Certificate" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -151,7 +151,7 @@ function Hero() {
               <img 
                 src={li}
                 alt="Library" 
-                className='w-12 h-6 object-cover rounded transition-all duration-300 ease-in-out animate-fadeIn'
+                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
               />
             )}
           </p>
@@ -164,4 +164,4 @@ function Hero() {
   )
 }
 
-export default Hero;
+export default Hero

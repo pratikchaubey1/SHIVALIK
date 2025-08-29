@@ -1,11 +1,11 @@
 import React, { createContext, useState } from 'react'
-import toast from 'react-hot-toast';
+import { toast, Toaster } from "react-hot-toast";
 
 
 export const ProductsData = createContext()
 
 const Products = [
-  { id: 1, title: "Pan Card", description: "Pan card use daily life", price: "200", src: "https://tse4.mm.bing.net/th/id/OIP.4pX7fuHo_W5HFfrTrh5YygHaEK?pid=Api&P=0&h=180" },
+  { id: 1, title: "Pan Card", description: "Pan card use daily life", price: "200", src: "https://i.pinimg.com/736x/dd/19/b9/dd19b9cf4869fbf1d1583b58d472acea.jpg"},
   { id: 2, title: "Aadhar Services", description: "Link and update Aadhar easily", price: "150", src: "https://tse1.mm.bing.net/th/id/OIP.o6ileBbQ2OgIGwwfbvA1FgHaEK?pid=Api&P=0&h=180" },
   { id: 3, title: "Driving License", description: "Apply or renew your driving license", price: "500", src: "https://tse3.mm.bing.net/th/id/OIP.LqR0EJ-AjUpJPEfPaQsUwwAAAA?pid=Api&P=0&h=180" },
   { id: 4, title: "Library Membership", description: "Access thousands of books and journals", price: "300", src: "https://tse2.mm.bing.net/th/id/OIP.WvUt-DFKsFEl7x7ITQ3Y-QHaEK?pid=Api&P=0&h=180" },
@@ -23,7 +23,7 @@ const Products = [
  export function Context({children}) {
     const [product,setProduct] = useState(Products)
     const [addCart,setAddCart] = useState([])
-
+    console.log("context wala ",product)
     const HandleClickAdd = (id) => {
         const addData = product.find((item) => item.id === id)
 

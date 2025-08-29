@@ -11,7 +11,7 @@ import w from "../assets/w.jpg";
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-10 px-6 md:px-16">
+    <footer className="bg-gray-900 rounded-lg text-gray-300 py-10 px-6 md:px-16">
       {/* Animated Grid */}
       <motion.div
         className="max-w-7xl mx-auto grid grid-cols-2 gap-8 md:grid-cols-4"

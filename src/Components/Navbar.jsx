@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from 'react'
 import { motion, useScroll, useTransform } from "framer-motion";
 import { IoIosSearch } from "react-icons/io";
@@ -41,12 +40,16 @@ function Navbar() {
     
         </div>      
         <div className="absolute right-4 sm:right-6 top-2 sm:top-6 flex gap-3 sm:gap-6 text-gray-700 text-xl sm:text-xl">
-            <div className='flex gap-1 justify-center items-center' >
-            <Link to="/cart" className="hover:text-[rgb(97,31,105)] transition-colors">
-            <FiShoppingBag/>
-            </Link>
-             <span className='h-6 w-6 text-base rounded-full bg-purple-500 animate-bounce flex justify-center items-center'>{addCart.length}</span>
-            </div>
+            <div className="relative flex items-center">
+  <Link to="/cart" className="hover:text-[rgb(97,31,105)] transition-colors relative">
+    <FiShoppingBag className="text-2xl" />
+    {addCart.length > 0 && (
+      <span className="absolute -top-2 -right-2 h-5 w-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+        {addCart.length}
+      </span>
+    )}
+  </Link>
+</div>
              <a href="#menu" className="hover:text-[#611f69] transition-colors">
              <CgProfile/>
             </a>
