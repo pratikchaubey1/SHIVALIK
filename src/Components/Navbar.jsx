@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ProductsData } from "../Context/Context";
+import { ProductsData } from "../context/Context";
 import { FiShoppingBag, FiUser } from "react-icons/fi";
 import { IoIosSearch } from "react-icons/io";
 import { MdMenu } from "react-icons/md";
