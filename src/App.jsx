@@ -18,7 +18,7 @@ import Card from './Components/Card';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg- flex flex-col">
       {/* Fixed Navbar (keeps motion effects inside Navbar.jsx) */}
       <Navbar />
       {/* Spacer to prevent content from going under the fixed navbar */}
