@@ -21,12 +21,12 @@ function Hero() {
   }
 
   return (
-    <div className='h-200 '>
+    <div className='min-h-screen bg-black'>
       <div className='flex flex-col'>
-        <h1 className='text-3xl font-bold ml-4 sm:ml-10 md:ml-15 mt-4 mb-5'>Category</h1>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mb-3'/>
+        <h1 className='text-3xl font-bold text-red-700 ml-4 sm:ml-10 md:ml-15 mt-4 mb-5'>Category</h1>
+        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mb-3 border-white'/>
         
-        <div className='flex flex-col sm:flex-row justify-around items-center mb-3'>
+        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
           <p 
             className='font-bold hover:cursor-pointer mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
             onMouseEnter={() => handleMouseEnter('partner')}
@@ -57,9 +57,9 @@ function Hero() {
             )}
           </p>
         </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3'/>
+        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3 border-white'/>
         
-        <div className='flex flex-col sm:flex-row justify-around items-center mb-3'>
+        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
           <p 
             className='font-bold hover:cursor-pointer sm:ml-10 md:ml-40 mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
             onMouseEnter={() => handleMouseEnter('insurance')}
@@ -90,9 +90,9 @@ function Hero() {
             )}
           </p>
         </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3'/>
+        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3 border-white'/>
         
-        <div className='flex flex-col sm:flex-row justify-around items-center mb-3'>
+        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
           <p 
             className='font-bold hover:cursor-pointer mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
             onMouseEnter={() => handleMouseEnter('tax')}
@@ -123,9 +123,9 @@ function Hero() {
             )}
           </p>
         </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3'/>
+        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3 border-white'/>
         
-        <div className='flex flex-col sm:flex-row justify-around items-center mb-3'>
+        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
           <p 
             className='font-bold hover:cursor-pointer sm:ml-5 md:ml-20 mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
             onMouseEnter={() => handleMouseEnter('certificate')}
@@ -156,7 +156,7 @@ function Hero() {
             )}
           </p>
         </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2'/>
+        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 border-white'/>
       </div>
       
       <Show/>

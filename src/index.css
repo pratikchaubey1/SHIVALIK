@@ -1,5 +1,6 @@
 @import "tailwindcss";
-.stroke-text {
-  -webkit-text-stroke: 2px black;
-  color: transparent;
+
+.stroke-text-red {
+  -webkit-text-stroke: 2px white; /* White outline stroke */
+  color: transparent; /* Fill transparent */
 }
