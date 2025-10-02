@@ -2,10 +2,18 @@ import React, { createContext, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useMediaQuery } from "react-responsive";
 import { useScroll, useTransform } from "framer-motion";
+import io from "socket.io-client";
+import axios from "axios";
+import { useAuth } from "./Auth/AuthContext";
+import { useCart } from "./CartContext";
 
 export const ProductsData = createContext();
 
-const Products = [
+// Initialize socket connection
+const socket = io('http://localhost:5000');
+
+// Fallback products in case API is not available
+const fallbackProducts = [
   {
     id: 1,
     title: "Pan Card",
@@ -58,7 +66,7 @@ const Products = [
   {
     id: 8,
     title: "Life Insurance",
-    description: "Secure your family’s future",
+    description: "Secure your family's future",
     price: "5000",
     src: "https://tse3.mm.bing.net/th/id/OIP.u2stUyWPQ29LJa1UguBogQHaFL?pid=Api&P=0&h=180",
   },
@@ -93,12 +101,16 @@ const Products = [
 ];
 
 export function Context({ children }) {
-  const [product, setProduct] = useState(Products);
-  const [addCart, setAddCart] = useState([]);
+  const { user } = useAuth();
+  const { addToCart: addToCartDynamic, cart, itemCount } = useCart();
+  
+  const [product, setProduct] = useState(fallbackProducts);
+  const [addCart, setAddCart] = useState([]); // Keep for backward compatibility
   const [isScroll, setIsScroll] = useState(false);
   const [isOpen, setisOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const { scrollY } = useScroll();
@@ -121,6 +133,55 @@ export function Context({ children }) {
     [0, 200],
     ["0vw", isDesktop ? "0vw" : "-18vw"]
   );
+
+  // Fetch products from API
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/products');
+      if (response.data.success) {
+        setProduct(response.data.products);
+      }
+    } catch (error) {
+      console.log('Failed to fetch products from API, using fallback data');
+      // Fallback products are already set in initial state
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize app
+  useEffect(() => {
+    fetchProducts();
+
+    // Socket event listeners for real-time updates
+    socket.on('productAdded', (newProduct) => {
+      setProduct(prevProducts => [...prevProducts, newProduct]);
+      toast.success(`New product added: ${newProduct.title}`);
+    });
+
+    socket.on('productUpdated', (updatedProduct) => {
+      setProduct(prevProducts => 
+        prevProducts.map(p => 
+          p.id === updatedProduct.id ? updatedProduct : p
+        )
+      );
+      toast.success(`Product updated: ${updatedProduct.title}`);
+    });
+
+    socket.on('productDeleted', (deletedProductData) => {
+      setProduct(prevProducts => 
+        prevProducts.filter(p => p.id !== parseInt(deletedProductData.id))
+      );
+      toast.success('Product removed');
+    });
+
+    // Cleanup socket listeners
+    return () => {
+      socket.off('productAdded');
+      socket.off('productUpdated');
+      socket.off('productDeleted');
+    };
+  }, []);
 
   // Scroll state
   useEffect(() => {
@@ -157,19 +218,21 @@ export function Context({ children }) {
     }),
   };
 
-  // Add to cart handler
-  const HandleClickAdd = (id) => {
-    const addData = product.find((item) => item.id === id);
-    if (addData) {
-      setAddCart([...addCart, addData]);
-      toast.success("Added to Cart");
+  // Add to cart handler - Updated to use dynamic cart
+  const HandleClickAdd = async (id) => {
+    const productData = product.find((item) => item.id === id);
+    if (productData) {
+      await addToCartDynamic(productData, 1);
+      // Also update legacy addCart for backward compatibility
+      setAddCart([...addCart, productData]);
     }
   };
 
   const Value = {
     product,
     HandleClickAdd,
-    addCart,
+    addCart: cart || addCart, // Use dynamic cart, fallback to legacy
+    cartItemCount: itemCount,
     isScroll,
     logoSize,
     logoY,
@@ -184,6 +247,10 @@ export function Context({ children }) {
     overlayVariants,
     inputVariants,
     listItemVariants,
+    loading,
+    socket,
+    fetchProducts,
+    user, // Add user to context
   };
 
   return (
