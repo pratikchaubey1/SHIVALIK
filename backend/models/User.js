@@ -50,6 +50,16 @@ const UserSchema = new mongoose.Schema({
     }
   },
   cart: [CartItemSchema],
+  address: {
+    fullName: { type: String, trim: true },
+    phone: { type: String, trim: true },
+    line1: { type: String, trim: true },
+    line2: { type: String, trim: true },
+    city: { type: String, trim: true },
+    state: { type: String, trim: true },
+    postalCode: { type: String, trim: true },
+    country: { type: String, trim: true, default: 'India' }
+  },
   lastLogin: Date
 }, {
   timestamps: true
@@ -75,7 +85,7 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
 
 // Method to generate OTP
 UserSchema.methods.generateOTP = function() {
-  const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+  const otp = Math.floor(10000 + Math.random() * 90000).toString(); // 5-digit OTP
   this.otp = {
     code: otp,
     expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes from now

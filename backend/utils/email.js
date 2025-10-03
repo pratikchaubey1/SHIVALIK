@@ -1,20 +1,47 @@
 const nodemailer = require('nodemailer');
 
-// Create transporter (using Gmail for this example)
-// In production, you should use environment variables for these credentials
+// Create transporter configurable via env for Gmail or any SMTP provider
+// Prefer SMTP_* if provided; otherwise fallback to Gmail service
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  const {
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_SECURE,
+    EMAIL_USER,
+    EMAIL_PASS,
+  } = process.env;
+
+  if (SMTP_HOST && EMAIL_USER && EMAIL_PASS) {
+    return nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT ? Number(SMTP_PORT) : 465,
+      secure: SMTP_SECURE ? SMTP_SECURE === 'true' : true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
+  }
+
+  // Fallback to Gmail service (requires 2FA + App Password)
+  return nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER || 'your-email@gmail.com', // Add your email
-      pass: process.env.EMAIL_PASS || 'your-app-password'     // Add your app password
-    }
+      user: EMAIL_USER || 'your-email@gmail.com',
+      pass: EMAIL_PASS || 'your-app-password',
+    },
   });
 };
 
 // Send OTP email
 const sendOTPEmail = async (email, name, otp, type = 'registration') => {
   try {
+    // Development fallback: log OTP instead of sending email
+    if (process.env.EMAIL_DEV_MODE === 'true') {
+      console.log(`[DEV_MODE] OTP for ${email} (${type}): ${otp}`);
+      return { success: true, dev: true };
+    }
+
     const transporter = createTransporter();
     
     const emailType = type === 'registration' ? 'Account Registration' : 'Login Verification';
@@ -146,7 +173,25 @@ const sendWelcomeEmail = async (email, name) => {
   }
 };
 
+// Verify transporter (called on server start for diagnostics)
+const verifyEmailTransport = async () => {
+  if (process.env.EMAIL_DEV_MODE === 'true') {
+    console.log('[DEV_MODE] Email sending is disabled. OTPs will be logged to console.');
+    return true;
+  }
+  const transporter = createTransporter();
+  try {
+    await transporter.verify();
+    console.log('SMTP transporter is ready to send emails');
+    return true;
+  } catch (err) {
+    console.error('SMTP transporter verification failed:', err.message);
+    return false;
+  }
+};
+
 module.exports = {
   sendOTPEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  verifyEmailTransport
 };

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
+const { verifyEmailTransport } = require('./utils/email');
 
 const app = express();
 const server = http.createServer(app);
@@ -56,6 +57,9 @@ const connectDB = async () => {
 };
 
 connectDB();
+
+// Verify email transporter on startup (logs status)
+verifyEmailTransport();
 
 // Make io available to routes
 app.use((req, res, next) => {

@@ -103,6 +103,11 @@ const AdminDashboard = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
 
+  // Users state
+  const [users, setUsers] = useState([]);
+  const [usersPage, setUsersPage] = useState(1);
+  const [usersPagination, setUsersPagination] = useState({ totalUsers: 0, totalPages: 1, hasNext: false, hasPrev: false });
+
   // Form state
   const [formData, setFormData] = useState({
     id: '',
@@ -116,6 +121,7 @@ const AdminDashboard = () => {
     checkAuth();
     fetchProducts();
     fetchDashboardStats();
+    fetchUsers(1);
   }, []);
 
   const checkAuth = () => {
@@ -159,6 +165,19 @@ const AdminDashboard = () => {
       }
     } catch (error) {
       console.error('Failed to fetch dashboard stats:', error);
+    }
+  };
+
+  const fetchUsers = async (page = 1) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/admin/users?page=${page}&limit=10`, getAuthHeaders());
+      if (response.data.success) {
+        setUsers(response.data.users);
+        setUsersPagination(response.data.pagination);
+        setUsersPage(page);
+      }
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
     }
   };
 
@@ -343,140 +362,22 @@ const AdminDashboard = () => {
           </motion.div>
         </div>
 
-        {/* Products Section */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">Products Management</h2>
-              <button
-                onClick={openAddModal}
-                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
-                <FiPlus />
-                Add Product
-              </button>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900">{product.id}</td>
-                    <td className="px-6 py-4">
-                      <img
-                        src={product.src}
-                        alt={product.title}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{product.title}</div>
-                      <div className="text-sm text-gray-500">{product.description}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">₹{product.price}</td>
-                    <td className="px-6 py-4 text-sm font-medium">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => openEditModal(product)}
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          <FiEdit />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* Quick Links */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <a href="/admin/products" className="block bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+            <h3 className="text-lg font-semibold mb-2">Manage Products</h3>
+            <p className="text-sm text-gray-600">Add, edit, and delete products</p>
+          </a>
+          <a href="/admin/users" className="block bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+            <h3 className="text-lg font-semibold mb-2">Manage Users</h3>
+            <p className="text-sm text-gray-600">View and manage all users</p>
+          </a>
+          <a href="/admin/orders" className="block bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+            <h3 className="text-lg font-semibold mb-2">Manage Orders</h3>
+            <p className="text-sm text-gray-600">Review and update orders</p>
+          </a>
         </div>
-
-        {/* Recent Users Section */}
-        {stats.recentUsers && stats.recentUsers.length > 0 && (
-          <div className="bg-white rounded-lg shadow mt-8">
-            <div className="p-6 border-b">
-              <h2 className="text-lg font-semibold">Recent Users</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Login</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {stats.recentUsers.map((user, index) => (
-                    <tr key={user._id || index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{user.name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          user.isVerified 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {user.isVerified ? 'Verified' : 'Pending'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
       </div>
-
-      {/* Modals */}
-      <ProductModal
-        show={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSubmit={handleAddProduct}
-        title="Add New Product"
-        formData={formData}
-        setFormData={setFormData}
-      />
-
-      <ProductModal
-        show={showEditModal}
-        onClose={() => {
-          setShowEditModal(false);
-          setSelectedProduct(null);
-          resetForm();
-        }}
-        onSubmit={handleEditProduct}
-        title="Edit Product"
-        isEdit={true}
-        formData={formData}
-        setFormData={setFormData}
-      />
     </div>
   );
 };

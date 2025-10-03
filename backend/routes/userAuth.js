@@ -1,8 +1,12 @@
 const express = require('express');
 const User = require('../models/User');
+const OTP = require('../models/OTP');
 const { sendOTPEmail, sendWelcomeEmail } = require('../utils/email');
 
 const router = express.Router();
+
+// Helper to generate 5-digit OTP
+const generateOTP = () => Math.floor(10000 + Math.random() * 90000).toString();
 
 // Middleware to check if user is authenticated
 const requireAuth = (req, res, next) => {
@@ -299,9 +303,10 @@ router.post('/resend-otp', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate new OTP
-    const otp = user.generateOTP();
-    await user.save();
+    // Generate new OTP and store in collection
+    const otp = generateOTP();
+    await OTP.deleteMany({ email: user.email });
+    await OTP.create({ email: user.email, otp });
 
     // Send OTP email
     const emailResult = await sendOTPEmail(user.email, user.name, otp, type);
@@ -317,6 +322,115 @@ router.post('/resend-otp', async (req, res) => {
 
   } catch (error) {
     console.error('Resend OTP error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Passwordless OTP: Request OTP (register or login)
+router.post('/request-otp', async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: 'Please provide name and email' });
+    }
+
+    // Find or create user by email (keep returning userId for frontend state)
+    let user = await User.findOne({ email });
+    if (!user) {
+      const randomPassword = Math.random().toString(36).slice(-12) + '!A1';
+      user = new User({ name, email, password: randomPassword, isVerified: false });
+    } else if (name && user.name !== name) {
+      user.name = name;
+    }
+    await user.save();
+
+    // Generate and store OTP in OTP collection (replace previous)
+    const otp = generateOTP();
+    await OTP.deleteMany({ email: user.email });
+    await OTP.create({ email: user.email, otp });
+
+    const emailResult = await sendOTPEmail(user.email, user.name, otp, 'login');
+    if (!emailResult.success) {
+      return res.status(500).json({ message: 'Failed to send OTP email. Please try again.' });
+    }
+
+    return res.json({ success: true, message: 'OTP sent to your email.', userId: user._id });
+  } catch (error) {
+    console.error('request-otp error:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Passwordless OTP: Verify OTP
+router.post('/verify-otp', async (req, res) => {
+  try {
+    const { userId, otp } = req.body;
+    if (!userId || !otp) {
+      return res.status(400).json({ message: 'Please provide user ID and OTP' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Validate OTP from OTP collection by email
+    const otpDoc = await OTP.findOne({ email: user.email, otp });
+    if (!otpDoc) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    // OTP valid: delete it and sign in
+    await OTP.deleteMany({ email: user.email });
+
+    if (!user.isVerified) user.isVerified = true;
+    user.lastLogin = new Date();
+    await user.save();
+
+    req.session.userId = user._id;
+    req.session.user = { id: user._id, name: user.name, email: user.email };
+
+    return res.json({
+      success: true,
+      message: 'Signed in successfully',
+      user: { id: user._id, name: user.name, email: user.email, isVerified: user.isVerified }
+    });
+  } catch (error) {
+    console.error('verify-otp error:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   GET /api/user-auth/address
+// @desc    Get current user's address
+// @access  Private
+router.get('/address', requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userId).select('address');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ success: true, address: user.address || {} });
+  } catch (err) {
+    console.error('Get address error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/user-auth/address
+// @desc    Update current user's address
+// @access  Private
+router.put('/address', requireAuth, async (req, res) => {
+  try {
+    const { fullName, phone, line1, line2, city, state, postalCode, country } = req.body;
+    const user = await User.findById(req.session.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.address = { fullName, phone, line1, line2, city, state, postalCode, country };
+    await user.save();
+
+    res.json({ success: true, message: 'Address updated', address: user.address });
+  } catch (err) {
+    console.error('Update address error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

@@ -1,139 +1,281 @@
 import React from "react";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import { FiMinus, FiPlus, FiTrash2, FiArrowLeft, FiShoppingCart, FiUser, FiSearch, FiBell } from "react-icons/fi";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext";
 
 function Cart() {
-  
+  const { cart, itemCount, updateCartItem, removeFromCart, clearCart, getCartTotal } = useCart();
+  const navigate = useNavigate();
+  const { isDark } = useTheme();
+
+  const formatINR = (n) => `₹${Number(n || 0).toFixed(2)}`;
+  const subtotalNum = Number(getCartTotal());
+  const shipping = 0; // Free
+  const tax = Number((subtotalNum * 0.18).toFixed(2)); // 18%
+  const total = (subtotalNum + shipping + tax).toFixed(2);
+
+  const inc = (item) => updateCartItem(item.productId, (item.quantity || 1) + 1);
+  const dec = (item) => updateCartItem(item.productId, Math.max(1, (item.quantity || 1) - 1));
+
   return (
-    <div className="bg-g min-h-screen py-6 px-4 sm:px-8 md:px-16 lg:px-24">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      isDark 
+        ? 'bg-gradient-to-br from-[#1a2332] via-[#2a3441] to-[#1e2a38] text-white' 
+        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
+    }`}>
       {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-10">
-        <h1 className="text-2xl font-semibold">Cart page</h1>
-        <nav className="flex flex-wrap justify-center sm:justify-end items-center gap-4 sm:gap-6 text-gray-700">
-          <a href="/" className="hover:text-orange-500">Home</a>
-          <a href="/shop" className="hover:text-orange-500">Shop</a>
-          <a href="/cart" className="text-orange-500 font-semibold">Cart</a>
-          <a href="/account" className="hover:text-orange-500">My Account</a>
-          <span className="font-medium">$130.00</span>
-          <span className="text-sm text-gray-500">2 item</span>
-          <span className="cursor-pointer">🛒</span>
-        </nav>
-      </header>
-
-      {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="w-full text-left text-sm md:text-base">
-          <thead>
-            <tr className="border-t border-b bg-g">
-              <th className="py-3 px-2">Product</th>
-              <th className="py-3 px-2">Price</th>
-              <th className="py-3 px-2">Quantity</th>
-              <th className="py-3 px-2">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b">
-              <td className="flex items-center gap-3 py-3 px-2 min-w-[220px]">
-                <button className="text-gray-400 hover:text-red-500">✕</button>
-                <img src="https://via.placeholder.com/50" alt="Yellow Jacket" className="h-10 w-10 sm:h-12 sm:w-12" />
-                <span className="truncate">Yellow Jacket</span>
-              </td>
-              <td className="py-3 px-2">$95.00</td>
-              <td className="py-3 px-2">
-                <input type="number" defaultValue="4" className="w-16 border px-2 py-1 rounded" />
-              </td>
-              <td className="py-3 px-2">$380.00</td>
-            </tr>
-            <tr>
-              <td className="flex items-center gap-3 py-3 px-2 min-w-[220px]">
-                <button className="text-gray-400 hover:text-red-500">✕</button>
-                <img src="https://via.placeholder.com/50" alt="Casacos Parka Homens" className="h-10 w-10 sm:h-12 sm:w-12" />
-                <span className="truncate">Casacos Parka Homens</span>
-              </td>
-              <td className="py-3 px-2">$95.00</td>
-              <td className="py-3 px-2">
-                <input type="number" defaultValue="3" className="w-16 border px-2 py-1 rounded" />
-              </td>
-              <td className="py-3 px-2">$90.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Buttons + Coupon */}
-      <div className="flex flex-col lg:flex-row justify-between items-center mt-6 gap-4">
-        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <input
-            type="text"
-            placeholder="Enter Coupon Code Here"
-            className="border px-3 py-2 rounded w-full sm:w-64"
-          />
-          <button className="bg-black text-white px-4 py-2 rounded w-full sm:w-auto">
-            Apply Coupon
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-3 w-full lg:w-auto justify-center">
-          <button className="bg-green-500 text-white px-4 py-2 rounded w-full sm:w-auto">
-            ← Continue Shopping
-          </button>
-          <button className="bg-orange-400 text-white px-4 py-2 rounded w-full sm:w-auto">
-            Empty Cart
-          </button>
-          <button className="bg-blue-400 text-white px-4 py-2 rounded w-full sm:w-auto">
-            Update Cart
-          </button>
+      <div className={`border-b transition-colors duration-300 ${
+        isDark 
+          ? 'bg-[#1a2332] border-gray-700' 
+          : 'bg-white border-gray-200'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-red-500 tracking-wider">SHIVALIK</h1>
+            </div>
+            
+            {/* Header Icons */}
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <FiShoppingCart className={`h-6 w-6 ${
+                  isDark ? 'text-green-400' : 'text-green-600'
+                }`} />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </div>
+              <FiUser className={`h-6 w-6 cursor-pointer transition-colors ${
+                isDark 
+                  ? 'text-gray-300 hover:text-white' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`} />
+              <FiSearch className={`h-6 w-6 cursor-pointer transition-colors ${
+                isDark 
+                  ? 'text-gray-300 hover:text-white' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`} />
+              <FiBell className={`h-6 w-6 ${
+                isDark ? 'text-red-400' : 'text-red-600'
+              }`} />
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                isDark ? 'bg-red-600' : 'bg-red-700'
+              }`}>
+                <span className="text-white text-sm font-medium">≡</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Cart bottom section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10">
-        {/* Recommended products */}
-        <div className="flex flex-wrap justify-center gap-6">
-          <div className="text-center w-28 sm:w-32">
-            <img src="https://images.unsplash.com/photo-1756370473190-4c41ddbd5e59?q=80&w=692&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Jeans" className="mx-auto" />
-            <p className="mt-2 text-sm sm:text-base">Blue Jeans</p>
-            <p className="text-xs sm:text-sm text-gray-600">$15.00</p>
-            <button className="border border-red-500 text-red-500 px-2 py-1 mt-2 text-xs sm:text-sm rounded hover:bg-red-500 hover:text-white w-full">
-              ADD TO CART
-            </button>
-          </div>
-          <div className="text-center w-28 sm:w-32">
-            <img src="https://images.unsplash.com/photo-1646295433021-926281ff0d6f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxOHx8fGVufDB8fHx8fA%3D%3D" alt="Shoes" className="mx-auto" />
-            <p className="mt-2 text-sm sm:text-base">Pearl Platform</p>
-            <p className="text-xs sm:text-sm text-gray-600">$20.00</p>
-            <button className="border border-red-500 text-red-500 px-2 py-1 mt-2 text-xs sm:text-sm rounded hover:bg-red-500 hover:text-white w-full">
-              ADD TO CART
-            </button>
-          </div>
-          <div className="text-center w-28 sm:w-32">
-            <img src="https://plus.unsplash.com/premium_photo-1756181211629-a024a0154173?q=80&w=1196&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Watch" className="mx-auto" />
-            <p className="mt-2 text-sm sm:text-base">Uomo Watch</p>
-            <p className="text-xs sm:text-sm line-through text-gray-400">$3.00</p>
-            <p className="text-xs sm:text-sm text-gray-600">$2.00</p>
-            <button className="border border-red-500 text-red-500 px-2 py-1 mt-2 text-xs sm:text-sm rounded hover:bg-red-500 hover:text-white w-full">
-              ADD TO CART
-            </button>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Top Navigation */}
+        <div className="flex items-center justify-between mb-8">
+          <button 
+            onClick={() => navigate('/')} 
+            className={`flex items-center gap-2 transition-colors ${
+              isDark 
+                ? 'text-gray-300 hover:text-white' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <FiArrowLeft className="h-4 w-4" />
+            Continue Shopping
+          </button>
+          <div className={`text-sm ${
+            isDark ? 'text-gray-300' : 'text-gray-600'
+          }`}>
+            {formatINR(total)} &nbsp;&nbsp;•&nbsp;&nbsp; {itemCount} item{itemCount !== 1 ? 's' : ''}
           </div>
         </div>
 
-        {/* Cart Total */}
-        <div className="border rounded-lg p-6 bg-white shadow">
-          <h2 className="text-lg font-semibold mb-4">Cart Total</h2>
-          <div className="flex justify-between mb-2 text-sm sm:text-base">
-            <span>Subtotal</span>
-            <span>$470.00</span>
+        <h1 className="text-2xl font-bold mb-8">Shopping Cart</h1>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Cart Items */}
+          <div className="lg:col-span-2">
+            <div className={`rounded-lg border overflow-hidden transition-colors duration-300 ${
+              isDark 
+                ? 'bg-[#2a3441] border-gray-600' 
+                : 'bg-white border-gray-200'
+            }`}>
+              <div className={`px-6 py-4 border-b transition-colors duration-300 ${
+                isDark 
+                  ? 'border-gray-600 text-gray-200' 
+                  : 'border-gray-200 text-gray-700'
+              }`}>
+                <h2 className="text-lg font-medium">Cart Items</h2>
+              </div>
+              
+              {cart.length === 0 ? (
+                <div className={`px-6 py-12 text-center ${
+                  isDark ? 'text-gray-400' : 'text-gray-600'
+                }`}>
+                  Your cart is empty
+                </div>
+              ) : (
+                <div className={`divide-y ${
+                  isDark ? 'divide-gray-600' : 'divide-gray-200'
+                }`}>
+                  {cart.map((item) => (
+                    <div key={item.productId} className="p-6">
+                      <div className="flex items-start gap-4">
+                        <img 
+                          src={item.src} 
+                          alt={item.title} 
+                          className={`h-20 w-20 rounded-lg object-cover ${
+                            isDark ? 'bg-gray-700' : 'bg-gray-200'
+                          }`} 
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`text-lg font-medium mb-1 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                          }`}>{item.title}</h3>
+                          <p className={`text-sm mb-3 ${
+                            isDark ? 'text-gray-400' : 'text-gray-600'
+                          }`}>{item.description}</p>
+                          <div className={`font-medium text-lg ${
+                            isDark ? 'text-blue-400' : 'text-blue-600'
+                          }`}>{formatINR(item.price)}</div>
+                        </div>
+                        
+                        <div className="flex flex-col items-end gap-3">
+                          {/* Quantity Controls */}
+                          <div className={`flex items-center rounded-lg border transition-colors duration-300 ${
+                            isDark 
+                              ? 'bg-[#1a2332] border-gray-600' 
+                              : 'bg-gray-50 border-gray-300'
+                          }`}>
+                            <button 
+                              onClick={() => dec(item)} 
+                              className={`p-2 rounded-l-lg transition-colors ${
+                                isDark 
+                                  ? 'text-gray-300 hover:text-white hover:bg-gray-600' 
+                                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                              }`}
+                            >
+                              <FiMinus className="h-4 w-4" />
+                            </button>
+                            <span className={`px-4 py-2 min-w-[3rem] text-center ${
+                              isDark ? 'text-white' : 'text-gray-900'
+                            }`}>{item.quantity || 1}</span>
+                            <button 
+                              onClick={() => inc(item)} 
+                              className={`p-2 rounded-r-lg transition-colors ${
+                                isDark 
+                                  ? 'text-gray-300 hover:text-white hover:bg-gray-600' 
+                                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                              }`}
+                            >
+                              <FiPlus className="h-4 w-4" />
+                            </button>
+                          </div>
+                          
+                          {/* Remove Button */}
+                          <button 
+                            onClick={() => removeFromCart(item.productId)} 
+                            className={`p-2 rounded-lg transition-colors ${
+                              isDark 
+                                ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 hover:text-red-300' 
+                                : 'bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-700'
+                            }`}
+                          >
+                            <FiTrash2 className="h-4 w-4" />
+                          </button>
+                          
+                          {/* Item Total */}
+                          <div className={`text-lg font-semibold ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                          }`}>
+                            {formatINR((parseFloat(item.price) || 0) * (item.quantity || 0))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex justify-between mb-4 text-sm sm:text-base">
-            <span>Shipping</span>
-            <span className="text-blue-500 cursor-pointer">Calculate Shipping</span>
+
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <div className={`rounded-lg border overflow-hidden sticky top-8 transition-colors duration-300 ${
+              isDark 
+                ? 'bg-[#2a3441] border-gray-600' 
+                : 'bg-white border-gray-200'
+            }`}>
+              <div className={`px-6 py-4 border-b transition-colors duration-300 ${
+                isDark 
+                  ? 'border-gray-600 text-gray-200' 
+                  : 'border-gray-200 text-gray-700'
+              }`}>
+                <h2 className="text-lg font-medium">Order Summary</h2>
+              </div>
+              
+              <div className="p-6 space-y-4">
+                <div className={`flex justify-between ${
+                  isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  <span>Subtotal</span>
+                  <span className={isDark ? 'text-white' : 'text-gray-900'}>{formatINR(subtotalNum)}</span>
+                </div>
+                
+                <div className={`flex justify-between ${
+                  isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  <span>Shipping</span>
+                  <span className={`font-medium ${
+                    isDark ? 'text-green-400' : 'text-green-600'
+                  }`}>Free</span>
+                </div>
+                
+                <div className={`flex justify-between ${
+                  isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  <span>Tax</span>
+                  <span className={isDark ? 'text-white' : 'text-gray-900'}>{formatINR(tax)}</span>
+                </div>
+                
+                <div className={`border-t pt-4 ${
+                  isDark ? 'border-gray-600' : 'border-gray-200'
+                }`}>
+                  <div className="flex justify-between text-lg font-bold">
+                    <span>Total</span>
+                    <span className={isDark ? 'text-blue-400' : 'text-blue-600'}>{formatINR(total)}</span>
+                  </div>
+                </div>
+                
+                <button
+                  disabled={cart.length === 0}
+                  onClick={() => navigate('/checkout/address')}
+                  className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isDark 
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
+                      : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
+                  }`}
+                >
+                  Proceed to Checkout →
+                </button>
+                
+                <p className={`text-center text-xs mt-4 ${
+                  isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
+                  Secure checkout powered by SSL encryption
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between font-semibold mb-6 text-sm sm:text-base">
-            <span>Total</span>
-            <span>$470.00</span>
-          </div>
-          <button className="w-full bg-indigo-400 text-white py-3 font-medium hover:bg-indigo-500 rounded">
-            Proceed To Checkout →
-          </button>
         </div>
       </div>
+
+      {/* Footer */}
+      
     </div>
   );
 }

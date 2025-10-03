@@ -65,7 +65,7 @@ const SignUp = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    if (!otp || otp.length !== 6) {
+    if (!otp || otp.length !== 5) {
       return;
     }
     
@@ -110,7 +110,7 @@ const SignUp = () => {
           <p className="text-gray-600">
             {authStep === 'form' 
               ? 'Join Shivalik Service Hub today' 
-              : `Enter the 6-digit code sent to ${userData.email}`
+              : `Enter the 5-digit code sent to ${userData.email}`
             }
           </p>
         </div>
@@ -132,7 +132,7 @@ const SignUp = () => {
                   name="name"
                   value={userData.name}
                   onChange={handleUserDataChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full pl-10 pr-4 py-3 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   placeholder="Enter your full name"
                   required
                 />
@@ -154,7 +154,7 @@ const SignUp = () => {
                   name="email"
                   value={userData.email}
                   onChange={handleUserDataChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full pl-10 pr-4 py-3 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   placeholder="Enter your email"
                   required
                 />
@@ -176,7 +176,7 @@ const SignUp = () => {
                   name="password"
                   value={userData.password}
                   onChange={handleUserDataChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full pl-10 pr-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   placeholder="Create a password (min 6 characters)"
                   required
                 />
@@ -198,7 +198,7 @@ const SignUp = () => {
                   name="confirmPassword"
                   value={userData.confirmPassword}
                   onChange={handleUserDataChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full pl-10 pr-4 py-3 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   placeholder="Confirm your password"
                   required
                 />
@@ -229,10 +229,10 @@ const SignUp = () => {
               <input
                 type="text"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="w-full px-4 py-4 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition tracking-widest"
-                placeholder="000000"
-                maxLength={6}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                className="w-full px-4 py-4 text-black text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition tracking-widest"
+                placeholder="00000"
+                maxLength={5}
                 required
               />
             </motion.div>

@@ -2,52 +2,46 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/Auth/AuthContext';
-import { FiMail, FiLock, FiArrowLeft, FiRefreshCw } from 'react-icons/fi';
+import { FiMail, FiUser, FiArrowLeft, FiRefreshCw } from 'react-icons/fi';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { login, verifyLogin, authStep, authType, resendOTP, resetAuth } = useAuth();
+  const { requestOtp, verifyOtp, authStep, resendOTP, resetAuth } = useAuth();
   
-  const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
+  const [form, setForm] = useState({
+    name: '',
+    email: ''
   });
   
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
 
-  const handleCredentialsChange = (e) => {
-    setCredentials({
-      ...credentials,
+  const handleFormChange = (e) => {
+    setForm({
+      ...form,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleCredentialsSubmit = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
-    const result = await login(credentials);
-    if (result.success) {
-      // OTP sent, form will show OTP input
-    }
-    
+    const result = await requestOtp(form);
+    // If success, authStep switches to 'otp' by context
     setLoading(false);
   };
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    if (!otp || otp.length !== 6) {
+    if (!otp || otp.length !== 5) {
       return;
     }
     
     setLoading(true);
     
-    const result = authType === 'login' ? 
-      await verifyLogin(otp) : 
-      await verifyRegister(otp);
-      
+    const result = await verifyOtp(otp);
     if (result.success) {
       navigate('/');
     }
@@ -85,18 +79,40 @@ const SignIn = () => {
           </motion.h1>
           <p className="text-gray-600">
             {authStep === 'form' 
-              ? 'Welcome back to Shivalik Service Hub' 
-              : `Enter the 6-digit code sent to ${credentials.email}`
+              ? 'Continue with your name and email'
+              : `Enter the 5-digit code sent to ${form.email}`
             }
           </p>
         </div>
 
         {authStep === 'form' ? (
-          <form onSubmit={handleCredentialsSubmit} className="space-y-6">
+          <form onSubmit={handleFormSubmit} className="space-y-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.25 }}
+            >
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleFormChange}
+                  className="w-full pl-10 pr-4 py-3 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.35 }}
             >
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
@@ -106,32 +122,10 @@ const SignIn = () => {
                 <input
                   type="email"
                   name="email"
-                  value={credentials.email}
-                  onChange={handleCredentialsChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  value={form.email}
+                  onChange={handleFormChange}
+                  className="w-full pl-10 pr-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   placeholder="Enter your email"
-                  required
-                />
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="password"
-                  name="password"
-                  value={credentials.password}
-                  onChange={handleCredentialsChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  placeholder="Enter your password"
                   required
                 />
               </div>
@@ -140,12 +134,12 @@ const SignIn = () => {
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.45 }}
               type="submit"
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Sending OTP...' : 'Continue with OTP'}
+              {loading ? 'Sending OTP...' : 'Send OTP'}
             </motion.button>
           </form>
         ) : (
@@ -161,10 +155,10 @@ const SignIn = () => {
               <input
                 type="text"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="w-full px-4 py-4 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition tracking-widest"
-                placeholder="000000"
-                maxLength={6}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                className="w-full px-4 py-4 text-center text-2xl font-mono border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition tracking-widest"
+                placeholder="00000"
+                maxLength={5}
                 required
               />
             </motion.div>
@@ -191,7 +185,7 @@ const SignIn = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               type="submit"
-              disabled={loading || otp.length !== 6}
+              disabled={loading || otp.length !== 5}
               className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Verifying...' : 'Verify & Sign In'}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Show from './Show'
 import Partner from '../assets/Partner.jpg'
 import Pan from '../assets/Pan.jpg'
@@ -8,158 +8,76 @@ import Tax from '../assets/tax.jpg'
 import land from '../assets/land.jpg'
 import certi from '../assets/Car.jpg'
 import li from '../assets/li.jpg'
+import { useTheme } from '../context/ThemeContext'
+import { motion } from 'framer-motion'
 
 function Hero() {
-  const [hoveredItem, setHoveredItem] = useState(null)
+  const { isDark } = useTheme()
 
-  const handleMouseEnter = (item) => {
-    setHoveredItem(item)
-  }
-
-  const handleMouseLeave = () => {
-    setHoveredItem(null)
-  }
+  const categories = [
+    { img: Partner, label: 'Partner Program' },
+    { img: Pan, label: 'Pan Card' },
+    { img: In, label: 'Insurance' },
+    { img: service, label: 'Service' },
+    { img: Tax, label: 'Tax' },
+    { img: land, label: 'Land Record' },
+    { img: certi, label: 'Certificate' },
+    { img: li, label: 'Library' },
+  ]
 
   return (
-    <div className='min-h-screen bg-black'>
-      <div className='flex flex-col'>
-        <h1 className='text-3xl font-bold text-red-700 ml-4 sm:ml-10 md:ml-15 mt-4 mb-5'>Category</h1>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mb-3 border-white'/>
-        
-        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
-          <p 
-            className='font-bold hover:cursor-pointer mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('partner')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Partner Program
-            {hoveredItem === 'partner' && (
-              <img 
-                src={Partner} 
-                alt="Partner Program" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-          
-          <p 
-            className='font-bold hover:cursor-pointer sm:mr-10 md:mr-40 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('pan')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Pan Card
-            {hoveredItem === 'pan' && (
-              <img 
-                src={Pan}
-                alt="Pan Card" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-        </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3 border-white'/>
-        
-        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
-          <p 
-            className='font-bold hover:cursor-pointer sm:ml-10 md:ml-40 mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('insurance')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Insurance
-            {hoveredItem === 'insurance' && (
-              <img 
-                src={In} 
-                alt="Insurance" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-          
-          <p 
-            className='font-bold hover:cursor-pointer flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('service')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Service
-            {hoveredItem === 'service' && (
-              <img 
-                src={service} 
-                alt="Service" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-        </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3 border-white'/>
-        
-        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
-          <p 
-            className='font-bold hover:cursor-pointer mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('tax')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Tax
-            {hoveredItem === 'tax' && (
-              <img 
-                src={Tax} 
-                alt="Tax" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-          
-          <p 
-            className='font-bold hover:cursor-pointer sm:mr-10 md:mr-70 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('land')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Land Record
-            {hoveredItem === 'land' && (
-              <img 
-                src={land}
-                alt="Land Record" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-        </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 mb-3 border-white'/>
-        
-        <div className='flex flex-col text-red-700 sm:flex-row justify-around items-center mb-3'>
-          <p 
-            className='font-bold hover:cursor-pointer sm:ml-5 md:ml-20 mb-2 sm:mb-0 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('certificate')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Certificate
-            {hoveredItem === 'certificate' && (
-              <img 
-                src={certi}
-                alt="Certificate" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-          
-          <p 
-            className='font-bold hover:cursor-pointer sm:mr-5 md:mr-20 flex items-center gap-2 transition-all duration-300 ease-in-out'
-            onMouseEnter={() => handleMouseEnter('library')}
-            onMouseLeave={handleMouseLeave}
-          >
-            Library
-            {hoveredItem === 'library' && (
-              <img 
-                src={li}
-                alt="Library" 
-                className='w-12 h-12 object-cover rounded transition-transform duration-300 ease-in-out transform hover:scale-125'
-              />
-            )}
-          </p>
-        </div>
-        <hr className='w-[90%] sm:w-[80%] md:w-[70%] ml-4 sm:ml-10 md:ml-50 mt-2 border-white'/>
+    <div className={`min-h-screen transition-colors duration-300 ${
+      isDark ? 'bg-black' : 'bg-gray-50'
+    }`}>
+      <div className='container mx-auto px-6 sm:px-8 py-10'>
+        <motion.h1 
+          className={`text-4xl sm:text-5xl font-extrabold mb-8 ${
+            isDark ? 'text-blue-400' : 'text-blue-600'
+          }`}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Categories
+        </motion.h1>
+
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          {categories.map((c, idx) => (
+            <motion.div
+              key={c.label}
+              className={`${isDark 
+                ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 shadow-black/40' 
+                : 'bg-gradient-to-br from-white to-blue-50 border border-blue-100 shadow-blue-100'} 
+                group rounded-2xl p-4 flex flex-col items-center overflow-hidden shadow-[0_10px_24px_rgba(0,0,0,0.12)]`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.05 * idx }}
+              whileHover={{ y: -4 }}
+            >
+              <div className="relative w-full aspect-square overflow-hidden rounded-xl">
+                <img
+                  src={c.img}
+                  alt={c.label}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
+              <div className={`mt-3 text-center text-sm sm:text-base font-semibold ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
+                {c.label}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
       </div>
-      
-      <Show/>
+
+      {/* Keep the rest of the page content as before */}
+      <Show />
     </div>
   )
 }

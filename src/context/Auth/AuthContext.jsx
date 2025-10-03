@@ -42,28 +42,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register user (Step 1 - Send OTP)
-  const register = async (userData) => {
+  // Passwordless: Request OTP (name + email)
+  const requestOtp = async (data) => {
     try {
-      const response = await axios.post('/user-auth/register', userData);
+      const response = await axios.post('/user-auth/request-otp', data);
       if (response.data.success) {
         setTempUserId(response.data.userId);
-        setAuthType('register');
+        setAuthType('login');
         setAuthStep('otp');
         toast.success(response.data.message);
         return { success: true };
       }
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed';
+      const message = error.response?.data?.message || 'Failed to request OTP';
       toast.error(message);
       return { success: false, message };
     }
   };
 
-  // Verify registration OTP (Step 2)
-  const verifyRegister = async (otp) => {
+  // Passwordless: Verify OTP
+  const verifyOtp = async (otp) => {
     try {
-      const response = await axios.post('/user-auth/verify-register', {
+      const response = await axios.post('/user-auth/verify-otp', {
         userId: tempUserId,
         otp
       });
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login user (Step 1 - Send OTP)
+  // Deprecated legacy login (kept for compatibility)
   const login = async (credentials) => {
     try {
       const response = await axios.post('/user-auth/login', credentials);
@@ -95,22 +95,12 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed';
-      
-      // Handle special case for unverified users
-      if (error.response?.data?.needsVerification) {
-        setTempUserId(error.response.data.userId);
-        setAuthType('register');
-        setAuthStep('otp');
-        toast.error(message);
-        return { success: false, needsVerification: true };
-      }
-      
       toast.error(message);
       return { success: false, message };
     }
   };
 
-  // Verify login OTP (Step 2)
+  // Deprecated legacy verify login (kept for compatibility)
   const verifyLogin = async (otp) => {
     try {
       const response = await axios.post('/user-auth/verify-login', {
@@ -134,7 +124,7 @@ export const AuthProvider = ({ children }) => {
 
   // Resend OTP
   const resendOTP = async () => {
-    if (!tempUserId || !authType) {
+    if (!tempUserId) {
       toast.error('No active verification session');
       return { success: false };
     }
@@ -142,7 +132,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post('/user-auth/resend-otp', {
         userId: tempUserId,
-        type: authType
+        type: 'login'
       });
       if (response.data.success) {
         toast.success(response.data.message);
@@ -186,11 +176,13 @@ export const AuthProvider = ({ children }) => {
     loading,
     authStep,
     authType,
-    register,
-    verifyRegister,
+    // New passwordless flow
+    requestOtp,
+    verifyOtp,
+    resendOTP,
+    // Legacy (still exported just in case)
     login,
     verifyLogin,
-    resendOTP,
     logout,
     resetAuth,
     checkAuth

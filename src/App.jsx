@@ -4,6 +4,7 @@ import HomePage from './Components/HomePage';
 import Background from './assets/Background.png';
 import Hero from './Components/Hero';
 import BestSellingProduct from './Components/BestSellingProduct';
+import Products from './Components/Products';
 import { motion } from 'framer-motion';
 import { Routes, Route } from 'react-router-dom';
 import Cart from './Components/Cart';
@@ -17,16 +18,31 @@ import Payment from './Components/Payment';
 import Card from './Components/Card';
 import AdminLogin from './Components/Admin/AdminLogin';
 import AdminDashboard from './Components/Admin/AdminDashboard';
+import AdminProducts from './Components/Admin/AdminProducts';
+import AdminUsers from './Components/Admin/AdminUsers';
+import AdminOrders from './Components/Admin/AdminOrders';
 import SignIn from './Components/UserAuth/SignIn';
 import SignUp from './Components/UserAuth/SignUp';
+import ProtectedRoute from './Components/UserAuth/ProtectedRoute';
+import Address from './Components/Checkout/Address';
+import { useTheme } from './context/ThemeContext';
 
 function App() {
+  const { theme } = useTheme();
+  
   return (
-    <div className="min-h-screen bg- flex flex-col">
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${
+      theme === 'dark' 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white' 
+        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
+    }`}>
       <Routes>
         {/* Admin Routes (without navbar and footer) */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/products" element={<AdminProducts />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
         
         {/* User Auth Routes (without navbar and footer) */}
         <Route path="/signin" element={<SignIn />} />
@@ -57,12 +73,14 @@ function App() {
                 />
 
                 {/* Other Routes */}
-                <Route path="/cart" element={<Cart />} />
-                <Route path='/cart-Detail' element={<CartDetail/>} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                <Route path='/cart-Detail' element={<ProtectedRoute><CartDetail/></ProtectedRoute>} />
                 <Route path='/about' element={<About/>} />
                 <Route path='/contact' element={<Contact/>} />
-                <Route path='/account' element={<Account/>} />
-                <Route path='/pay' element={<Payment/>} />
+                <Route path='/account' element={<ProtectedRoute><Account/></ProtectedRoute>} />
+                <Route path='/checkout/address' element={<ProtectedRoute><Address/></ProtectedRoute>} />
+                <Route path='/pay' element={<ProtectedRoute><Payment/></ProtectedRoute>} />
                 <Route path='*' element={<NotFound/>} />
               </Routes>
             </main>
