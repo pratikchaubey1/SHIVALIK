@@ -10,18 +10,19 @@ function Account() {
   const { isDark } = useTheme()
 
   const [orders, setOrders] = useState([])
-  const [addresses, setAddresses] = useState([])
+  const [userAddress, setUserAddress] = useState(null)
   const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch orders and address
         const [ordersRes, addrRes] = await Promise.all([
-          axios.get('/orders/me').catch(() => ({ data: { success: true, orders: [] } })),
-          axios.get('/addresses/me').catch(() => ({ data: { success: true, addresses: [] } })),
+          axios.get('/payment/orders').catch(() => ({ data: { success: true, orders: [] } })),
+          axios.get('/user-auth/address').catch(() => ({ data: { success: false } })),
         ])
         if (ordersRes?.data?.success) setOrders(ordersRes.data.orders || [])
-        if (addrRes?.data?.success) setAddresses(addrRes.data.addresses || [])
+        if (addrRes?.data?.success) setUserAddress(addrRes.data.address || null)
       } finally {
         setLoadingData(false)
       }
@@ -82,16 +83,25 @@ function Account() {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between"><span className="text-gray-500">Name</span><span className="font-medium">{user?.name || '-'}</span></div>
                     <div className="flex justify-between"><span className="text-gray-500">Email</span><span className="font-medium">{user?.email || '-'}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-500">Phone</span><span className="font-medium">{user?.phone || 'Not added'}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Phone</span><span className="font-medium">{userAddress?.phone || 'Not added'}</span></div>
                     <div className="flex justify-between"><span className="text-gray-500">Member Since</span><span className="font-medium">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</span></div>
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold mb-4">Company Address</h2>
+                  <h2 className="text-lg font-bold mb-4">Shipping Address</h2>
                   <div className={`${isDark ? 'bg-white/5' : 'bg-gray-50'} rounded-xl p-4 text-sm leading-6`}>
-                    <div>{user?.address?.street || 'Add your address'}</div>
-                    <div>{[user?.address?.city, user?.address?.state].filter(Boolean).join(', ')}</div>
-                    <div>{user?.address?.country || ''} {user?.address?.zip || ''}</div>
+                    {userAddress ? (
+                      <>
+                        <div className="font-medium">{userAddress.fullName}</div>
+                        <div>{userAddress.phone}</div>
+                        <div>{userAddress.line1}</div>
+                        {userAddress.line2 && <div>{userAddress.line2}</div>}
+                        <div>{[userAddress.city, userAddress.state].filter(Boolean).join(', ')} {userAddress.postalCode}</div>
+                        <div>{userAddress.country}</div>
+                      </>
+                    ) : (
+                      <div className="text-gray-500">No address saved</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -136,25 +146,23 @@ function Account() {
             {/* Addresses */}
             <section id="addresses" className={`${isDark ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10' : 'bg-white border border-blue-100'} rounded-2xl p-6 shadow-[0_10px_24px_rgba(0,0,0,0.08)]`}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold">Saved Addresses</h2>
-                <Link to="/checkout/address" className="text-sm text-blue-600 hover:underline">Add New</Link>
+                <h2 className="text-lg font-bold">Saved Address</h2>
+                <Link to="/checkout/address" className="text-sm text-blue-600 hover:underline">{userAddress ? 'Edit' : 'Add New'}</Link>
               </div>
               {loadingData ? (
-                <div className="py-6 text-sm text-gray-500">Loading addresses...</div>
-              ) : (addresses?.length ? (
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {addresses.map((a, i) => (
-                    <div key={a._id || i} className={`${isDark ? 'bg-white/5' : 'bg-gray-50'} rounded-xl p-4 text-sm leading-6`}>
-                      <div className="font-semibold">{a.label || 'Address'}</div>
-                      <div>{a.street}</div>
-                      <div>{[a.city, a.state].filter(Boolean).join(', ')}</div>
-                      <div>{a.country} {a.zip}</div>
-                    </div>
-                  ))}
+                <div className="py-6 text-sm text-gray-500">Loading address...</div>
+              ) : userAddress ? (
+                <div className={`${isDark ? 'bg-white/5' : 'bg-gray-50'} rounded-xl p-4 text-sm leading-6`}>
+                  <div className="font-semibold">{userAddress.fullName}</div>
+                  <div>{userAddress.phone}</div>
+                  <div>{userAddress.line1}</div>
+                  {userAddress.line2 && <div>{userAddress.line2}</div>}
+                  <div>{[userAddress.city, userAddress.state].filter(Boolean).join(', ')} {userAddress.postalCode}</div>
+                  <div>{userAddress.country}</div>
                 </div>
               ) : (
-                <div className="py-6 text-sm text-gray-500">No saved addresses</div>
-              ))}
+                <div className="py-6 text-sm text-gray-500">No address saved yet</div>
+              )}
             </section>
 
             {/* Security placeholder */}

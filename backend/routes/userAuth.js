@@ -251,17 +251,18 @@ router.get('/me', requireAuth, async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        isVerified: user.isVerified,
-        createdAt: user.createdAt,
-        lastLogin: user.lastLogin
-      }
-    });
+  res.json({
+    success: true,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      isVerified: user.isVerified,
+      createdAt: user.createdAt,
+      lastLogin: user.lastLogin,
+      address: user.address || {}
+    }
+  });
 
   } catch (error) {
     console.error('Get user error:', error);

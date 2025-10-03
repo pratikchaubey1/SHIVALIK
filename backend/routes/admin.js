@@ -1,6 +1,7 @@
 const express = require('express');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const Order = require('../models/Order');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
@@ -124,7 +125,7 @@ router.get('/users', auth, async (req, res) => {
     const skip = (page - 1) * limit;
 
     const users = await User.find()
-      .select('name email isVerified createdAt lastLogin cart')
+      .select('name email isVerified createdAt lastLogin cart address')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -179,6 +180,112 @@ router.get('/dashboard', auth, async (req, res) => {
     });
   } catch (error) {
     console.error('Get dashboard error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   GET /api/admin/orders
+// @desc    Get all orders (admin view)
+// @access  Private (Admin only)
+router.get('/orders', auth, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const status = req.query.status; // Optional status filter
+
+    let query = {};
+    if (status && status !== 'all') {
+      query.status = status;
+    }
+
+    const orders = await Order.find(query)
+      .populate('userId', 'name email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalOrders = await Order.countDocuments(query);
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    // Calculate order statistics
+    const orderStats = await Order.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+          totalAmount: { $sum: '$total' }
+        }
+      }
+    ]);
+
+    res.json({
+      success: true,
+      orders,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalOrders,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      },
+      stats: orderStats
+    });
+  } catch (error) {
+    console.error('Get admin orders error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   GET /api/admin/orders/:id
+// @desc    Get specific order details (admin)
+// @access  Private (Admin only)
+router.get('/orders/:id', auth, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate('userId', 'name email');
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.json({
+      success: true,
+      order
+    });
+  } catch (error) {
+    console.error('Get admin order details error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/admin/orders/:id/status
+// @desc    Update order status
+// @access  Private (Admin only)
+router.put('/orders/:id/status', auth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    order.status = status;
+    await order.save();
+
+    res.json({
+      success: true,
+      message: 'Order status updated successfully',
+      order
+    });
+  } catch (error) {
+    console.error('Update order status error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

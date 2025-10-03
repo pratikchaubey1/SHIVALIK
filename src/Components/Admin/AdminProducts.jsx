@@ -11,28 +11,28 @@ const ProductModal = ({ show, onClose, onSubmit, title, isEdit = false, formData
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-lg p-6 w-full max-w-md">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white text-black rounded-lg p-6 w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">{title}</h2>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Product ID</label>
-            <input type="number" value={formData.id} onChange={e => handleChange('id', e.target.value)} disabled={isEdit} className="w-full p-2 border border-gray-300 rounded" required />
+            <label className="block text-sm text-black font-medium mb-1">Product ID</label>
+            <input type="number" value={formData.id} onChange={e => handleChange('id', e.target.value)} disabled={isEdit} className="w-full text-black p-2 border border-gray-300 rounded" required />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
-            <input type="text" value={formData.title} onChange={e => handleChange('title', e.target.value)} className="w-full p-2 border border-gray-300 rounded" required />
+            <label className="block text-sm font-medium text-black mb-1">Title</label>
+            <input type="text" value={formData.title} onChange={e => handleChange('title', e.target.value)} className="w-full p-2 border text-black border-gray-300 rounded" required />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
-            <textarea value={formData.description} onChange={e => handleChange('description', e.target.value)} className="w-full p-2 border border-gray-300 rounded" rows="3" required />
+            <label className="block text-sm font-medium text-black mb-1">Description</label>
+            <textarea value={formData.description} onChange={e => handleChange('description', e.target.value)} className="w-full p-2 border text-black border-gray-300 rounded" rows="3" required />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Price</label>
-            <input type="text" value={formData.price} onChange={e => handleChange('price', e.target.value)} className="w-full p-2 border border-gray-300 rounded" required />
+            <label className="block text-sm font-medium text-black mb-1">Price</label>
+            <input type="text" value={formData.price} onChange={e => handleChange('price', e.target.value)} className="w-full p-2 border text-black border-gray-300 rounded" required />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Image URL</label>
-            <input type="url" value={formData.src} onChange={e => handleChange('src', e.target.value)} className="w-full p-2 border border-gray-300 rounded" required />
+            <label className="block text-sm font-medium text-black mb-1">Image URL</label>
+            <input type="url" value={formData.src} onChange={e => handleChange('src', e.target.value)} className="w-full p-2 border text-black border-gray-300 rounded" required />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="submit" className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">{isEdit ? 'Update' : 'Add'} Product</button>
