@@ -4,6 +4,22 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove any default margins/padding that cause gaps */
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+}
+
 .stroke-text-red {
   -webkit-text-stroke: 2px white; /* White outline stroke */
   color: transparent; /* Fill transparent */
