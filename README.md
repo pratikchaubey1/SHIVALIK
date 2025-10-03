@@ -24,7 +24,21 @@ A complete full-stack application with React frontend and Node.js backend, featu
 
 ## Quick Start
 
-### 1. Install Dependencies
+### Option 1: Automated Setup (Recommended)
+
+```bash
+# Run the automated setup script
+npm run setup
+```
+
+This will:
+- Install all dependencies (frontend + backend)
+- Create the admin user and seed the database
+- Give you the next steps
+
+### Option 2: Manual Setup
+
+#### 1. Install Dependencies
 
 ```bash
 # Install frontend dependencies
@@ -35,7 +49,7 @@ cd backend
 npm install
 ```
 
-### 2. Setup Database
+#### 2. Setup Database
 
 Make sure MongoDB is running on your system, then seed the database:
 
@@ -44,9 +58,15 @@ cd backend
 npm run seed
 ```
 
+**⚠️ IMPORTANT: You MUST run this command to create the admin user!**
+
 This will create:
 - All existing products in the database
-- Default admin user: `admin` / `admin123`
+- Default admin user with credentials:
+  - Username: `admin`
+  - Password: `admin123`
+
+**Note for collaborators:** If you cloned this repository and can't login as admin, make sure you run `npm run seed` in the backend directory first.
 
 ### 3. Start the Application
 
@@ -179,10 +199,27 @@ NODE_ENV=development
 
 ## Troubleshooting
 
+### Admin Login Issues
+**Problem:** Getting "Invalid credentials" when trying to login as admin
+
+**Solution:**
+1. Make sure you ran the seed command:
+   ```bash
+   cd backend
+   npm run seed
+   ```
+2. Use the correct credentials:
+   - Username: `admin`
+   - Password: `admin123`
+3. Make sure MongoDB is running and connected
+4. Check the backend console for any errors
+
+### Other Common Issues
 1. **MongoDB Connection Error**: Ensure MongoDB is running
 2. **Port Conflicts**: Check if ports 5000 or 5173 are in use
 3. **CORS Issues**: Verify backend CORS configuration
 4. **Socket Connection**: Check browser console for WebSocket errors
+5. **Environment Variables**: Make sure `.env` file exists in backend directory
 
 ## Future Enhancements
 

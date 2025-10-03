@@ -54,15 +54,17 @@ const AdminUsers = () => {
     toast.success('Logged out successfully')
   }
 
-  if (loading) return <div className="min-h-screen bg-gray-100 flex items-center justify-center">Loading...</div>
+  if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-lg text-gray-700">Loading users...</div></div>
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-gray-900">Admin • Users</h1>
-            <button onClick={handleLogout} className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"><FiLogOut />Logout</button>
+            <button onClick={handleLogout} className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+              <FiLogOut /><span>Logout</span>
+            </button>
           </div>
         </div>
       </header>
@@ -70,10 +72,14 @@ const AdminUsers = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow">
           <div className="p-6 border-b flex justify-between items-center">
-            <h2 className="text-lg font-semibold">All Users</h2>
+            <h2 className="text-lg font-semibold text-gray-900">All Users</h2>
             <div className="flex gap-2">
-              <button onClick={() => pagination.hasPrev && fetchUsers(page - 1)} disabled={!pagination.hasPrev} className="px-3 py-1 border rounded disabled:opacity-50">Prev</button>
-              <button onClick={() => pagination.hasNext && fetchUsers(page + 1)} disabled={!pagination.hasNext} className="px-3 py-1 border rounded disabled:opacity-50">Next</button>
+              <button onClick={() => pagination.hasPrev && fetchUsers(page - 1)} disabled={!pagination.hasPrev} className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50 text-gray-700 hover:bg-gray-50">
+                Prev
+              </button>
+              <button onClick={() => pagination.hasNext && fetchUsers(page + 1)} disabled={!pagination.hasNext} className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50 text-gray-700 hover:bg-gray-50">
+                Next
+              </button>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -121,15 +127,15 @@ const AdminUsers = () => {
                         <td colSpan="6" className="px-6 py-4">
                           <div className="bg-white rounded-lg p-4 border">
                             <h4 className="font-medium text-gray-900 mb-2">Address Details</h4>
-                            <div className="text-sm text-gray-600 space-y-1">
-                              <div><strong>Name:</strong> {u.address.fullName || 'N/A'}</div>
-                              <div><strong>Phone:</strong> {u.address.phone || 'N/A'}</div>
-                              <div><strong>Address:</strong> {u.address.line1 || 'N/A'}</div>
-                              {u.address.line2 && <div><strong>Landmark:</strong> {u.address.line2}</div>}
-                              <div><strong>City:</strong> {u.address.city || 'N/A'}</div>
-                              <div><strong>State:</strong> {u.address.state || 'N/A'}</div>
-                              <div><strong>Postal Code:</strong> {u.address.postalCode || 'N/A'}</div>
-                              <div><strong>Country:</strong> {u.address.country || 'N/A'}</div>
+                            <div className="text-sm text-gray-700 space-y-1">
+                              <div><strong className="text-gray-900">Name:</strong> {u.address.fullName || 'N/A'}</div>
+                              <div><strong className="text-gray-900">Phone:</strong> {u.address.phone || 'N/A'}</div>
+                              <div><strong className="text-gray-900">Address:</strong> {u.address.line1 || 'N/A'}</div>
+                              {u.address.line2 && <div><strong className="text-gray-900">Landmark:</strong> {u.address.line2}</div>}
+                              <div><strong className="text-gray-900">City:</strong> {u.address.city || 'N/A'}</div>
+                              <div><strong className="text-gray-900">State:</strong> {u.address.state || 'N/A'}</div>
+                              <div><strong className="text-gray-900">Postal Code:</strong> {u.address.postalCode || 'N/A'}</div>
+                              <div><strong className="text-gray-900">Country:</strong> {u.address.country || 'N/A'}</div>
                             </div>
                           </div>
                         </td>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Navbar from './Components/Navbar';
 import HomePage from './Components/HomePage';
 import Background from './assets/Background.png';
@@ -6,7 +6,7 @@ import Hero from './Components/Hero';
 import BestSellingProduct from './Components/BestSellingProduct';
 import Products from './Components/Products';
 import { motion } from 'framer-motion';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Cart from './Components/Cart';
 import CartDetail from './Components/CartDetail';
 import NotFound from './Components/NotFound';
@@ -26,16 +26,22 @@ import SignUp from './Components/UserAuth/SignUp';
 import ProtectedRoute from './Components/UserAuth/ProtectedRoute';
 import Address from './Components/Checkout/Address';
 import { useTheme } from './context/ThemeContext';
+import { ProductsData } from './context/Context';
+import { StatsProvider } from './context/StatsContext';
 
 function App() {
   const { theme } = useTheme();
+  const { isScroll } = useContext(ProductsData);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
   
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white' 
-        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
-    }`}>
+    <StatsProvider>
+      <div className={`min-h-screen w-full flex flex-col m-0 p-0 transition-colors duration-300 ${
+        theme === 'dark' 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white' 
+          : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
+      }`}>
       <Routes>
         {/* Admin Routes (without navbar and footer) */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -51,13 +57,20 @@ function App() {
         {/* Regular Routes (with navbar and footer) */}
         <Route path="/*" element={
           <>
-            {/* Fixed Navbar (keeps motion effects inside Navbar.jsx) */}
+            {/* Single Navbar with dynamic behavior */}
             <Navbar />
+            
             {/* Spacer to prevent content from going under the fixed navbar */}
-            <div className="h-24 sm:h-28 md:h-36"></div>
+            <div 
+              className={`block w-full m-0 p-0 ${
+                (isHomePage && !isScroll) 
+                  ? 'h-[160px]'
+                  : 'h-[90px]'
+              }`}
+            ></div>
 
             {/* Main content grows to push footer to the bottom */}
-            <main className="flex-1">
+            <main className="flex-1 w-full m-0 p-0">
               <Routes>
                 {/* Home Page Route */}
                 <Route
@@ -91,6 +104,7 @@ function App() {
         } />
       </Routes>
     </div>
+    </StatsProvider>
   );
 }
 
