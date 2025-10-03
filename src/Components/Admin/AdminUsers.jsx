@@ -9,6 +9,7 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ hasNext: false, hasPrev: false })
+  const [expandedUsers, setExpandedUsers] = useState(new Set())
   const navigate = useNavigate()
 
   useEffect(() => { checkAuth(); fetchUsers(1) }, [])
@@ -34,6 +35,16 @@ const AdminUsers = () => {
     } catch (e) {
       // no-op
     } finally { setLoading(false) }
+  }
+
+  const toggleExpanded = (userId) => {
+    const newExpanded = new Set(expandedUsers)
+    if (newExpanded.has(userId)) {
+      newExpanded.delete(userId)
+    } else {
+      newExpanded.add(userId)
+    }
+    setExpandedUsers(newExpanded)
   }
 
   const handleLogout = () => {
@@ -72,21 +83,59 @@ const AdminUsers = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Verified</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Login</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {users.map(u => (
-                  <tr key={u._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{u.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{u.email}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${u.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{u.isVerified ? 'Yes' : 'No'}</span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never'}</td>
-                  </tr>
+                  <React.Fragment key={u._id}>
+                    <tr className="hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{u.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{u.email}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${u.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{u.isVerified ? 'Yes' : 'No'}</span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {u.address && u.address.city ? (
+                          <span className="text-green-600">✓ {u.address.city}, {u.address.state}</span>
+                        ) : (
+                          <span className="text-gray-400">No address</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
+                      <td className="px-6 py-4 text-sm">
+                        {u.address && u.address.city && (
+                          <button 
+                            onClick={() => toggleExpanded(u._id)}
+                            className="text-blue-600 hover:text-blue-800 text-xs"
+                          >
+                            {expandedUsers.has(u._id) ? 'Hide Details' : 'View Address'}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                    {expandedUsers.has(u._id) && u.address && (
+                      <tr className="bg-gray-50">
+                        <td colSpan="6" className="px-6 py-4">
+                          <div className="bg-white rounded-lg p-4 border">
+                            <h4 className="font-medium text-gray-900 mb-2">Address Details</h4>
+                            <div className="text-sm text-gray-600 space-y-1">
+                              <div><strong>Name:</strong> {u.address.fullName || 'N/A'}</div>
+                              <div><strong>Phone:</strong> {u.address.phone || 'N/A'}</div>
+                              <div><strong>Address:</strong> {u.address.line1 || 'N/A'}</div>
+                              {u.address.line2 && <div><strong>Landmark:</strong> {u.address.line2}</div>}
+                              <div><strong>City:</strong> {u.address.city || 'N/A'}</div>
+                              <div><strong>State:</strong> {u.address.state || 'N/A'}</div>
+                              <div><strong>Postal Code:</strong> {u.address.postalCode || 'N/A'}</div>
+                              <div><strong>Country:</strong> {u.address.country || 'N/A'}</div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

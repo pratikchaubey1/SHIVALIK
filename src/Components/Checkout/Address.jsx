@@ -40,7 +40,10 @@ const Address = () => {
       const res = await axios.put('/user-auth/address', form);
       if (res.data.success) {
         toast.success('Address saved');
-        navigate('/pay');
+        navigate('/pay', { 
+          state: { addressUpdated: true },
+          replace: true
+        });
       }
     } catch (err) {
       const msg = err.response?.data?.message || 'Failed to save address';
