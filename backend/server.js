@@ -74,6 +74,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/user-auth', require('./routes/userAuth'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/payment', require('./routes/payment'));
+app.use('/api/stats', require('./routes/stats'));
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {

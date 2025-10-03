@@ -27,6 +27,7 @@ import ProtectedRoute from './Components/UserAuth/ProtectedRoute';
 import Address from './Components/Checkout/Address';
 import { useTheme } from './context/ThemeContext';
 import { ProductsData } from './context/Context';
+import { StatsProvider } from './context/StatsContext';
 
 function App() {
   const { theme } = useTheme();
@@ -35,11 +36,12 @@ function App() {
   const isHomePage = location.pathname === '/';
   
   return (
-    <div className={`min-h-screen w-full flex flex-col m-0 p-0 transition-colors duration-300 ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white' 
-        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
-    }`}>
+    <StatsProvider>
+      <div className={`min-h-screen w-full flex flex-col m-0 p-0 transition-colors duration-300 ${
+        theme === 'dark' 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white' 
+          : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
+      }`}>
       <Routes>
         {/* Admin Routes (without navbar and footer) */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -102,6 +104,7 @@ function App() {
         } />
       </Routes>
     </div>
+    </StatsProvider>
   );
 }
 

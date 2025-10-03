@@ -3,8 +3,10 @@ import { Link, NavLink } from "react-router-dom";
 import { MdOutlinePhone, MdOutlineMail } from "react-icons/md";
 import { FaWhatsapp, FaFacebook } from "react-icons/fa6";
 import { IoMapOutline, IoLogoInstagram } from "react-icons/io5";
+import { HiUsers, HiEye } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
+import { useStats } from "../context/StatsContext";
 import visa from "../assets/visa.png";
 import master from "../assets/master.jpg";
 import upi from "../assets/upi.jpg";
@@ -12,6 +14,7 @@ import w from "../assets/w.jpg";
 
 function Footer() {
   const { isDark } = useTheme();
+  const { stats, loading } = useStats();
   
   return (
     <footer className={`rounded-lg py-10 px-6 md:px-16 transition-colors duration-300 ${
@@ -147,7 +150,7 @@ function Footer() {
 
       {/* Bottom Bar */}
       <motion.div
-        className={`border-t mt-10 pt-5 text-center text-sm transition-colors duration-300 ${
+        className={`border-t mt-10 pt-5 text-sm transition-colors duration-300 ${
           isDark 
             ? 'border-gray-700 text-gray-400' 
             : 'border-gray-300 text-gray-500'
@@ -156,7 +159,41 @@ function Footer() {
         whileInView={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 1 }}
       >
-        © {new Date().getFullYear()} SHIVALIK SERVICE HUB. All Rights Reserved.
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          {/* Copyright */}
+          <div className="text-center sm:text-left">
+            © {new Date().getFullYear()} SHIVALIK SERVICE HUB. All Rights Reserved.
+          </div>
+          
+          {/* Stats */}
+          {!loading && (
+            <motion.div 
+              className="flex items-center gap-4 text-xs"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1, duration: 0.6 }}
+            >
+              <div 
+                className={`flex items-center gap-1 px-2 py-1 rounded-full ${
+                  isDark ? 'bg-gray-800' : 'bg-gray-200'
+                }`}
+                title={`Total Users: ${stats.totalUsers.toLocaleString()}`}
+              >
+                <HiUsers className="text-blue-500" />
+                <span>{stats.totalUsers.toLocaleString()}</span>
+              </div>
+              <div 
+                className={`flex items-center gap-1 px-2 py-1 rounded-full ${
+                  isDark ? 'bg-gray-800' : 'bg-gray-200'
+                }`}
+                title={`Total Views: ${stats.totalViews.toLocaleString()}`}
+              >
+                <HiEye className="text-green-500" />
+                <span>{stats.totalViews.toLocaleString()}</span>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </motion.div>
     </footer>
   );
