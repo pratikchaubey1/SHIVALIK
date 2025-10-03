@@ -20,7 +20,7 @@ const connectDB = async () => {
 // Test user data
 const testUserData = {
   name: 'Test User',
-  email: 'dg91499255@gmail.com',
+  email: 'chatpratik7@gmail.com',
   password: 'temppassword123', // Temp password (not used in OTP system)
   isVerified: true,
   address: {
