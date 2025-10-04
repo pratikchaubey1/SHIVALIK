@@ -25,53 +25,7 @@ function Cart() {
         ? 'bg-gradient-to-br from-[#1a2332] via-[#2a3441] to-[#1e2a38] text-white' 
         : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900'
     }`}>
-      {/* Header */}
-      <div className={`border-b transition-colors duration-300 ${
-        isDark 
-          ? 'bg-[#1a2332] border-gray-700' 
-          : 'bg-white border-gray-200'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-red-500 tracking-wider">SHIVALIK</h1>
-            </div>
-            
-            {/* Header Icons */}
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <FiShoppingCart className={`h-6 w-6 ${
-                  isDark ? 'text-green-400' : 'text-green-600'
-                }`} />
-                {itemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {itemCount}
-                  </span>
-                )}
-              </div>
-              <FiUser className={`h-6 w-6 cursor-pointer transition-colors ${
-                isDark 
-                  ? 'text-gray-300 hover:text-white' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`} />
-              <FiSearch className={`h-6 w-6 cursor-pointer transition-colors ${
-                isDark 
-                  ? 'text-gray-300 hover:text-white' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`} />
-              <FiBell className={`h-6 w-6 ${
-                isDark ? 'text-red-400' : 'text-red-600'
-              }`} />
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                isDark ? 'bg-red-600' : 'bg-red-700'
-              }`}>
-                <span className="text-white text-sm font-medium">≡</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Top Navigation */}
@@ -235,12 +189,7 @@ function Cart() {
                   }`}>Free</span>
                 </div>
                 
-                <div className={`flex justify-between ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  <span>Tax</span>
-                  <span className={isDark ? 'text-white' : 'text-gray-900'}>{formatINR(tax)}</span>
-                </div>
+               
                 
                 <div className={`border-t pt-4 ${
                   isDark ? 'border-gray-600' : 'border-gray-200'

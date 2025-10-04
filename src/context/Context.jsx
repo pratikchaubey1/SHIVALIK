@@ -115,23 +115,25 @@ export function Context({ children }) {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const { scrollY } = useScroll();
 
-  // Logo animation values
-  const logoSize = useTransform(
+  // Logo animation values (aligned with Navbar logo behavior)
+    const logoSize = useTransform(
     scrollY,
     [0, 200],
-    isDesktop ? ["10vw", "5vw"] : ["16vw", "8vw"]
+    isDesktop ? ["10vw", "5vw"] : ["20vw", "12vw"]
   );
 
+  // 🔹 Y position transform
   const logoY = useTransform(
     scrollY,
     [0, 200],
-    isDesktop ? ["0vh", "-8vh"] : ["0vh", "-6vh"]
+    isDesktop ? ["0vh", "-3vh"] : ["0vh", "-4vh"]
   );
 
+  // 🔹 X position transform (constant but still motion value → avoid jump)
   const logoX = useTransform(
     scrollY,
     [0, 200],
-    ["0vw", isDesktop ? "0vw" : "-18vw"]
+    isDesktop ? ["0vw", "0vw"] : ["-5vw", "-5vw"]
   );
 
   // Fetch products from API
@@ -234,6 +236,7 @@ export function Context({ children }) {
     addCart: cart || addCart, // Use dynamic cart, fallback to legacy
     cartItemCount: itemCount,
     isScroll,
+    isDesktop,
     logoSize,
     logoY,
     logoX,
